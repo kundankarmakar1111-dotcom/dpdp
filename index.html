@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101b33">
+<meta name="description" content="Independent DPDP readiness and implementation support for Indian businesses. Find the level of support that fits your organisation.">
+<title>DPDP Advisory — Privacy, made operational</title>
+<style>
+:root {
+  --site-primary: #142344;
+  --site-on-primary: #F7F8FC;
+  --site-secondary: #D9B878;
+  --site-on-secondary: #142344;
+  --site-background: #F6F5F1;
+  --site-on-background: #142344;
+  --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-font-heading: Georgia, "Times New Roman", serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+  --ink: #152442;
+  --muted: #667187;
+  --paper: #F6F5F1;
+  --line: rgba(20,35,68,.12);
+  --gold: #D9B878;
+  --teal: #83D9CA;
+  --navy: #142344;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+body { margin: 0; font-family: var(--site-font-body); background: var(--site-background); color: var(--site-on-background); }
+button, input, select, textarea { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+#site-root { min-height: 100vh; width: 100%; background-color: var(--site-background); color: var(--site-on-background); overflow: clip; }
+.page { --space: calc(1rem * var(--site-spacing-scale)); }
+.container { width: min(1160px, calc(100% - 48px)); margin: 0 auto; }
+.topbar { position: absolute; z-index: 20; top: 0; left: 0; width: 100%; color: #F8F6F0; border-bottom: 1px solid rgba(255,255,255,.12); }
+.nav { min-height: 82px; display:flex; align-items:center; justify-content:space-between; gap:28px; }
+.brand { display:flex; align-items:center; gap:12px; font-size:12px; font-weight:750; letter-spacing:.16em; text-transform:uppercase; }
+.brand-mark { width:36px; height:36px; border:1px solid rgba(217,184,120,.8); color:var(--gold); border-radius:50%; display:grid; place-items:center; font-family:Georgia,serif; font-size:18px; letter-spacing:-.06em; }
+.brand small { display:block; color:rgba(255,255,255,.56); font-size:9px; letter-spacing:.17em; font-weight:600; margin-top:4px; }
+.nav-links { display:flex; align-items:center; gap:30px; font-size:12px; color:rgba(255,255,255,.75); }
+.nav-links a { transition: color .25s ease; }
+.nav-links a:hover { color:var(--gold); }
+.nav-cta { color:#fff; border:1px solid rgba(217,184,120,.7); border-radius:999px; padding:12px 17px; font-size:12px; font-weight:650; transition:background .25s, color .25s, transform .25s; }
+.nav-cta:hover { background:var(--gold); color:var(--navy); transform:translateY(-2px); }
+.menu-toggle { display:none; color:white; background:transparent; border:0; font-size:22px; }
+.hero { position:relative; color:#F8F6F0; background:var(--navy); min-height:720px; padding:160px 0 86px; isolation:isolate; }
+.hero:before { content:""; position:absolute; inset:0; z-index:-2; opacity:calc(.22 * var(--site-decoration-opacity)); background-image:linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px); background-size:64px 64px; mask-image:linear-gradient(to bottom, black, transparent 88%); }
+.hero:after { content:""; position:absolute; width:740px; height:740px; top:-190px; right:-120px; z-index:-1; pointer-events:none; opacity:calc(.95 * var(--site-decoration-opacity)); background:radial-gradient(circle at 45% 48%, rgba(111,158,182,.22), rgba(111,158,182,.04) 38%, transparent 69%); }
+.hero-grid { display:grid; grid-template-columns:1.1fr .9fr; align-items:center; gap:60px; }
+.eyebrow { display:flex; align-items:center; gap:11px; text-transform:uppercase; font-size:10px; letter-spacing:.2em; font-weight:750; color:var(--gold); }
+.eyebrow:before { content:""; width:26px; height:1px; background:currentColor; }
+.hero h1 { max-width:720px; margin:27px 0 24px; font:400 clamp(48px,6.1vw,82px)/.99 var(--site-font-heading); letter-spacing:-.055em; }
+.hero h1 em { color:var(--gold); font-weight:400; }
+.hero-copy { max-width:570px; color:rgba(248,246,240,.72); font-size:15px; line-height:1.85; }
+.hero-actions { margin-top:34px; display:flex; align-items:center; gap:21px; flex-wrap:wrap; }
+.btn { border:0; border-radius:999px; padding:15px 21px; font-weight:700; font-size:12px; letter-spacing:.015em; transition:transform .25s, box-shadow .25s, background .25s; display:inline-flex; align-items:center; justify-content:center; gap:14px; }
+.btn:hover { transform:translateY(-3px); box-shadow:0 12px 28px rgba(0,0,0,.16); }
+.btn-gold { background:var(--gold); color:var(--navy); }
+.btn-gold:hover { background:#E8CD98; }
+.btn-ghost { padding:12px 0; color:rgba(248,246,240,.82); background:none; }
+.btn-ghost span { font-size:17px; transition:transform .25s; }
+.btn-ghost:hover span { transform:translateX(4px); }
+.hero-note { margin-top:28px; display:flex; gap:12px; align-items:center; font-size:10px; letter-spacing:.045em; color:rgba(255,255,255,.5); }
+.hero-note .dot { width:6px; height:6px; background:var(--teal); border-radius:50%; box-shadow:0 0 0 5px rgba(131,217,202,.1); }
+.visual { position:relative; min-height:440px; display:grid; place-items:center; }
+.orbit { position:absolute; width:min(400px,100%); aspect-ratio:1; border:1px solid rgba(217,184,120,.20); border-radius:50%; animation:orbitPulse 7s ease-in-out infinite; }
+.orbit.o2 { width:310px; border-color:rgba(131,217,202,.2); animation-delay:-2s; }
+.orbit:before { content:""; position:absolute; top:12%; left:21%; width:8px; height:8px; border-radius:50%; background:var(--gold); box-shadow:0 0 20px rgba(217,184,120,.6); }
+.orbit.o2:before { top:auto; left:auto; bottom:17%; right:8%; background:var(--teal); }
+.glass-card { width:min(320px,85%); position:relative; border:1px solid rgba(255,255,255,.16); background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(255,255,255,.025)); backdrop-filter:blur(16px); border-radius:calc(24px * var(--site-radius-scale)); padding:24px; box-shadow:0 35px 80px rgba(0,0,0,.2); animation:float 6s ease-in-out infinite; }
+.card-head { display:flex; justify-content:space-between; align-items:center; font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:rgba(255,255,255,.57); }
+.status-chip { border:1px solid rgba(131,217,202,.35); border-radius:99px; color:var(--teal); padding:5px 8px; letter-spacing:.08em; font-size:8px; }
+.score { margin-top:28px; font:400 53px/1 var(--site-font-heading); }
+.score small { color:var(--teal); font:600 12px var(--site-font-body); letter-spacing:.02em; }
+.score-caption { color:rgba(255,255,255,.54); font-size:10px; margin-top:8px; }
+.meter { margin:22px 0 25px; height:4px; border-radius:12px; background:rgba(255,255,255,.12); overflow:hidden; }
+.meter span { display:block; width:72%; height:100%; background:linear-gradient(90deg,var(--teal),var(--gold)); border-radius:12px; animation:meter 2.4s cubic-bezier(.2,.7,.2,1) both; }
+.mini-rows { display:grid; gap:13px; }
+.mini-row { display:flex; justify-content:space-between; align-items:center; font-size:10px; color:rgba(255,255,255,.7); }
+.mini-row strong { font-size:10px; font-weight:600; color:#fff; }
+.mini-row .ok { color:var(--teal); font-size:9px; }
+.float-tag { position:absolute; background:#F6F5F1; color:var(--navy); padding:12px 15px; border-radius:10px; font-size:10px; box-shadow:0 12px 32px rgba(0,0,0,.17); animation:float 5s ease-in-out infinite reverse; }
+.float-tag strong { display:block; font-size:12px; margin-bottom:3px; }
+.float-tag.t1 { top:42px; right:0; }
+.float-tag.t2 { bottom:48px; left:0; animation-delay:-2s; }
+.float-tag .tiny { color:#61728D; font-size:9px; }
+.marquee-band { overflow:hidden; background:var(--gold); color:var(--navy); padding:15px 0; white-space:nowrap; }
+.marquee-track { width:max-content; display:flex; align-items:center; gap:35px; animation:marquee 38s linear infinite; font-size:10px; font-weight:750; letter-spacing:.16em; text-transform:uppercase; }
+.marquee-track span { display:inline-flex; align-items:center; gap:35px; }
+.marquee-track b { font-size:15px; font-weight:400; opacity:.65; }
+.section { padding:104px 0; }
+.section-head { display:flex; justify-content:space-between; align-items:end; gap:36px; margin-bottom:46px; }
+.kicker { color:#92733C; font-size:10px; font-weight:800; letter-spacing:.19em; text-transform:uppercase; }
+.section h2 { font:400 clamp(36px,4.2vw,57px)/1.07 var(--site-font-heading); letter-spacing:-.04em; margin:16px 0 0; max-width:610px; }
+.section h2 em { color:#9C7B43; }
+.section-intro { max-width:360px; color:var(--muted); font-size:13px; line-height:1.85; margin:0; }
+.pillars { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.pillar { min-height:230px; background:light-dark(#FFFFFF,#18243A); border:1px solid var(--line); border-radius:calc(16px * var(--site-radius-scale)); padding:27px; position:relative; overflow:hidden; transition:transform .3s, box-shadow .3s, border-color .3s; }
+.pillar:hover { transform:translateY(-6px); box-shadow:0 18px 45px rgba(20,35,68,.09); border-color:rgba(156,123,67,.4); }
+.pillar .num { font-size:10px; color:#9C7B43; letter-spacing:.15em; }
+.pillar .icon { width:44px; height:44px; display:grid; place-items:center; border:1px solid rgba(156,123,67,.27); border-radius:12px; margin:25px 0 19px; color:#9C7B43; }
+.pillar h3 { margin:0 0 10px; font-size:16px; font-weight:700; }
+.pillar p { margin:0; max-width:310px; color:var(--muted); font-size:12px; line-height:1.8; }
+.pillar:after { content:""; position:absolute; width:120px; height:120px; right:-70px; bottom:-70px; border:1px solid rgba(156,123,67,.16); border-radius:50%; box-shadow:0 0 0 18px rgba(156,123,67,.035),0 0 0 36px rgba(156,123,67,.025); }
+.approach { background:#EAE9E3; }
+.approach-grid { display:grid; grid-template-columns:.8fr 1.2fr; gap:90px; align-items:start; }
+.approach-intro { position:sticky; top:30px; }
+.approach-intro p { max-width:355px; color:#626D80; line-height:1.85; font-size:13px; margin:20px 0 26px; }
+.text-link { color:#8D6C34; font-size:12px; font-weight:750; display:inline-flex; align-items:center; gap:9px; }
+.text-link:hover { gap:14px; }
+.steps { border-top:1px solid rgba(20,35,68,.16); }
+.step { display:grid; grid-template-columns:54px 1fr; gap:18px; padding:25px 0; border-bottom:1px solid rgba(20,35,68,.16); }
+.step-index { color:#987844; font:400 19px var(--site-font-heading); }
+.step h3 { font-size:15px; margin:0 0 8px; }
+.step p { margin:0; font-size:12px; line-height:1.8; color:#667187; max-width:510px; }
+.quiz-section { background:var(--navy); color:#F8F6F0; position:relative; isolation:isolate; }
+.quiz-section:before { content:""; position:absolute; z-index:-1; inset:0; background:radial-gradient(ellipse at 86% 15%,rgba(131,217,202,.12),transparent 37%),radial-gradient(ellipse at 12% 80%,rgba(217,184,120,.1),transparent 40%); opacity:var(--site-decoration-opacity); }
+.quiz-layout { display:grid; grid-template-columns:.68fr 1.32fr; gap:70px; align-items:start; }
+.quiz-copy { padding-top:15px; }
+.quiz-copy .kicker { color:var(--teal); }
+.quiz-copy h2 { color:#F8F6F0; }
+.quiz-copy p { color:rgba(248,246,240,.65); font-size:13px; line-height:1.85; max-width:335px; }
+.quiz-note { margin-top:32px; border-top:1px solid rgba(255,255,255,.14); padding-top:17px; display:flex; gap:10px; align-items:start; color:rgba(255,255,255,.53); font-size:10px; line-height:1.7; }
+.quiz-note svg { flex-shrink:0; margin-top:2px; color:var(--teal); }
+.quiz-card { background:light-dark(#FBFAF6,#121E33); color:light-dark(var(--navy),#F8F6F0); border:1px solid rgba(217,184,120,.25); border-radius:calc(22px * var(--site-radius-scale)); padding:clamp(22px,4vw,42px); box-shadow:0 30px 80px rgba(0,0,0,.2); min-height:470px; }
+.quiz-top { display:flex; align-items:center; justify-content:space-between; gap:16px; font-size:10px; color:light-dark(#6D7687,#A6B2C9); letter-spacing:.09em; text-transform:uppercase; }
+.progress-track { height:3px; border-radius:12px; background:light-dark(#E8E7E0,#27344A); margin:17px 0 32px; overflow:hidden; }
+.progress-fill { width:0; height:100%; background:linear-gradient(90deg,#9ABEB4,var(--gold)); transition:width .5s cubic-bezier(.2,.7,.2,1); }
+.quiz-question { font:400 clamp(26px,3.3vw,39px)/1.15 var(--site-font-heading); letter-spacing:-.03em; margin:0 0 11px; }
+.quiz-sub { font-size:12px; line-height:1.7; color:light-dark(#687286,#A9B3C5); margin:0 0 25px; }
+.options { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.option { text-align:left; color:inherit; border:1px solid light-dark(#DEDCD3,#354057); background:transparent; border-radius:12px; padding:15px 15px; min-height:74px; position:relative; transition:all .22s; display:flex; gap:12px; align-items:flex-start; }
+.option:hover { border-color:#B2945A; transform:translateY(-2px); }
+.option.selected { border-color:#B28A45; background:light-dark(#F3EEE2,#263147); box-shadow:inset 0 0 0 1px rgba(178,138,69,.2); }
+.option .option-icon { width:27px; height:27px; border-radius:8px; display:grid; place-items:center; flex-shrink:0; color:#95723C; background:light-dark(#EDE6D8,#343C48); font-size:13px; }
+.option strong { font-size:11px; display:block; margin:2px 0 5px; }
+.option small { display:block; color:light-dark(#737C8B,#9EA9BD); font-size:10px; line-height:1.5; }
+.option .check { position:absolute; right:12px; top:12px; width:15px; height:15px; border:1px solid light-dark(#C8C7C0,#536077); border-radius:50%; }
+.option.selected .check { background:#B28A45; border-color:#B28A45; box-shadow:inset 0 0 0 4px light-dark(#F3EEE2,#263147); }
+.quiz-footer { margin-top:27px; display:flex; justify-content:space-between; align-items:center; gap:16px; }
+.quiz-footer .back { color:light-dark(#657086,#B2BDCE); font-size:11px; background:none; border:0; padding:12px 0; }
+.quiz-footer .back:disabled { opacity:.25; cursor:default; }
+.quiz-footer .continue { border:0; background:var(--gold); color:#142344; border-radius:99px; padding:14px 19px; font-size:11px; font-weight:800; display:flex; align-items:center; gap:17px; transition:transform .2s,opacity .2s; }
+.quiz-footer .continue:hover:not(:disabled) { transform:translateY(-2px); }
+.quiz-footer .continue:disabled { opacity:.35; cursor:not-allowed; }
+.result-head { display:flex; align-items:center; gap:10px; color:#5CA89B; text-transform:uppercase; font-weight:800; font-size:9px; letter-spacing:.15em; }
+.result-head span { width:7px; height:7px; background:#5CA89B; border-radius:50%; box-shadow:0 0 0 5px rgba(92,168,155,.13); }
+.result-title { font:400 clamp(29px,3.8vw,45px)/1.07 var(--site-font-heading); letter-spacing:-.04em; margin:17px 0 12px; }
+.result-desc { color:light-dark(#677184,#A9B3C5); font-size:12px; line-height:1.8; max-width:540px; }
+.result-price { margin:25px 0 20px; border:1px solid light-dark(#DED7C9,#354057); border-radius:14px; padding:19px 20px; display:flex; align-items:center; justify-content:space-between; gap:18px; background:light-dark(#F5F0E5,#1A2940); }
+.result-price small { display:block; color:light-dark(#7A7E84,#A1ADC0); font-size:9px; letter-spacing:.1em; text-transform:uppercase; margin-bottom:8px; }
+.result-price strong { font:400 clamp(24px,3vw,34px) var(--site-font-heading); }
+.result-price .scope-tag { border:1px solid light-dark(#D7C6A7,#5A503B); color:light-dark(#8A6932,#E0C48F); border-radius:99px; padding:7px 9px; font-size:9px; white-space:nowrap; }
+.deliverables { display:grid; grid-template-columns:1fr 1fr; gap:11px 18px; margin:20px 0 25px; }
+.deliverable { display:flex; align-items:start; gap:8px; font-size:10px; line-height:1.6; color:light-dark(#566176,#BCC5D3); }
+.deliverable svg { flex-shrink:0; color:#5CA89B; margin-top:1px; }
+.result-actions { display:flex; flex-wrap:wrap; gap:13px; align-items:center; }
+.result-actions .btn { font-size:11px; padding:14px 17px; }
+.result-actions .btn-outline { color:inherit; border:1px solid light-dark(#D6D5CC,#46516A); background:transparent; }
+.result-disclaimer { color:light-dark(#7D8490,#8995A9); font-size:9px; line-height:1.7; margin-top:17px; }
+.service-preview { margin-top:28px; padding-top:25px; border-top:1px solid light-dark(#E1DED5,#354057); animation:fadeService .35s ease both; }
+.service-preview h4 { font:400 25px/1.2 var(--site-font-heading); margin:0 0 8px; letter-spacing:-.025em; }
+.service-preview-intro { margin:0 0 18px; color:light-dark(#687286,#A9B3C5); font-size:11px; line-height:1.7; }
+.selected-service-list { display:grid; gap:11px; }
+.selected-service { padding:16px; border:1px solid light-dark(#E0DDD4,#354057); border-radius:12px; background:light-dark(#F8F6F0,#17253C); }
+.selected-service-top { display:flex; justify-content:space-between; align-items:flex-start; gap:15px; }
+.selected-service h5 { font-size:12px; line-height:1.5; margin:0; }
+.selected-service-price { flex-shrink:0; text-align:right; color:light-dark(#8A6932,#E0C48F); font-size:12px; font-weight:800; }
+.selected-service-price small { display:block; color:light-dark(#7A8495,#A1ADC0); font-size:9px; font-weight:500; margin-top:3px; }
+.selected-service ul { margin:12px 0 0; padding-left:17px; color:light-dark(#687286,#A9B3C5); font-size:10px; line-height:1.75; }
+.price-breakdown { margin-top:15px; padding:17px; border-radius:13px; background:light-dark(#F0EDE5,#202D43); }
+.price-row { display:flex; justify-content:space-between; gap:14px; padding:6px 0; color:light-dark(#606C80,#B3BECE); font-size:11px; line-height:1.55; }
+.price-row strong { color:light-dark(#142344,#F8F6F0); text-align:right; }
+.price-row.discount strong,.price-row.discount span { color:light-dark(#387D70,#83D9CA); }
+.price-total { border-top:1px solid light-dark(#D6D1C5,#3A465A); margin-top:9px; padding-top:14px; font-size:12px; }
+.price-total strong { font:400 24px var(--site-font-heading); color:light-dark(#142344,#F8F6F0); }
+.price-note { color:light-dark(#7D8490,#8995A9); font-size:9px; line-height:1.65; margin:12px 0 0; }
+.request-form { margin-top:23px; display:grid; grid-template-columns:1fr 1fr; gap:13px; }
+.request-form label { display:grid; gap:7px; color:light-dark(#687286,#A9B3C5); font-size:10px; font-weight:700; }
+.request-form input { min-width:0; width:100%; border:1px solid light-dark(#D8D6CE,#3A465A); border-radius:9px; background:light-dark(#FFFFFF,#101B2F); color:light-dark(#142344,#F8F6F0); padding:12px; font-size:12px; outline:none; }
+.request-form input:focus { border-color:#B28A45; box-shadow:0 0 0 3px rgba(178,138,69,.12); }
+.request-submit { grid-column:1 / -1; width:100%; margin-top:3px; }
+.selection-hint { margin:18px 0 0; padding:14px; border:1px dashed light-dark(#D8D6CE,#3A465A); border-radius:10px; color:light-dark(#687286,#A9B3C5); font-size:11px; line-height:1.7; }
+.multi-option .check { border-radius:4px; }
+.multi-option.selected .check { border-radius:4px; box-shadow:inset 0 0 0 3px light-dark(#F3EEE2,#263147); }
+.nav-links .nav-mail { color:var(--gold); }
+.contact-details { display:grid; gap:10px; margin-top:20px; color:#59667D; font-size:12px; line-height:1.7; }
+.contact-details a { color:#8D6C34; font-weight:750; text-decoration:underline; text-underline-offset:3px; }
+.privacy-section { background:light-dark(#FFFFFF,#121E33); border-top:1px solid light-dark(#E1DED5,#354057); padding:76px 0; }
+.privacy-section { display:none; }
+.privacy-page-active .topbar { position:relative; background:#101B33; }
+.privacy-page-active main,.privacy-page-active .contact-section,.privacy-page-active .footer { display:none; }
+.privacy-page-active .privacy-section { display:block; min-height:calc(100vh - 82px); }
+.privacy-page-active .nav-links,.privacy-page-active .nav-cta,.privacy-page-active .menu-toggle { display:none !important; }
+.privacy-back { display:none; color:var(--gold); border:1px solid rgba(217,184,120,.7); border-radius:999px; padding:12px 17px; font-size:12px; font-weight:650; }
+.privacy-page-active .privacy-back { display:inline-flex; }
+.privacy-copy { max-width:860px; margin:0 auto; }
+.privacy-copy h2 { font:400 clamp(36px,4.2vw,52px)/1.08 var(--site-font-heading); letter-spacing:-.04em; margin:15px 0 18px; }
+.privacy-copy .privacy-lead { color:light-dark(#667187,#A9B3C5); font-size:13px; line-height:1.85; max-width:730px; }
+.privacy-copy h3 { font-size:14px; line-height:1.5; margin:28px 0 8px; }
+.privacy-copy p,.privacy-copy li { color:light-dark(#606C80,#B3BECE); font-size:12px; line-height:1.9; }
+.privacy-copy ul { padding-left:20px; }
+.privacy-meta { color:light-dark(#8A6932,#E0C48F); font-size:10px; font-weight:750; letter-spacing:.08em; text-transform:uppercase; }
+.privacy-contact { display:inline-flex; margin-top:8px; color:light-dark(#8D6C34,#E0C48F); font-size:12px; font-weight:750; text-decoration:underline; text-underline-offset:3px; }
+@keyframes fadeService { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.contact-section { padding:90px 0 100px; }
+.contact-box { background:#E7E5DC; border-radius:calc(20px * var(--site-radius-scale)); padding:clamp(25px,5vw,58px); display:flex; align-items:center; justify-content:space-between; gap:34px; position:relative; overflow:hidden; }
+.contact-box:after { content:""; position:absolute; width:280px; height:280px; border:1px solid rgba(156,123,67,.16); border-radius:50%; right:20%; top:-170px; box-shadow:0 0 0 27px rgba(156,123,67,.035),0 0 0 54px rgba(156,123,67,.025); pointer-events:none; }
+.contact-box h2 { font:400 clamp(34px,4.3vw,55px)/1.06 var(--site-font-heading); letter-spacing:-.04em; margin:14px 0 0; max-width:640px; }
+.contact-box p { color:#697387; font-size:12px; line-height:1.8; margin:15px 0 0; max-width:520px; }
+.contact-box .btn { flex-shrink:0; z-index:1; }
+.footer { background:#0D172B; color:#F8F6F0; padding:29px 0; }
+.footer-row { display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; }
+.footer .brand { font-size:10px; }
+.footer-note { color:rgba(255,255,255,.45); font-size:9px; line-height:1.7; max-width:500px; }
+.footer-links { display:flex; gap:17px; color:rgba(255,255,255,.6); font-size:10px; }
+.footer-links a:hover { color:var(--gold); }
+.fade-up { opacity:0; transform:translateY(24px); transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.2,1); }
+.fade-up.in-view { opacity:1; transform:translateY(0); }
+.fade-up.delay-1 { transition-delay:.1s; }
+.fade-up.delay-2 { transition-delay:.2s; }
+.fade-up.delay-3 { transition-delay:.3s; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes orbitPulse { 0%,100%{transform:scale(1);opacity:.7} 50%{transform:scale(1.04);opacity:1} }
+@keyframes meter { from{width:0} to{width:72%} }
+@keyframes marquee { to{transform:translateX(-50%)} }
+@media (prefers-reduced-motion:reduce) { *,*:before,*:after { animation-duration:.01ms!important; animation-iteration-count:1!important; scroll-behavior:auto!important; transition-duration:.01ms!important; } .fade-up { opacity:1; transform:none; } }
+@media (max-width:900px) {
+ .hero-grid { grid-template-columns:1fr; gap:15px; }
+ .hero { padding-top:135px; }
+ .visual { min-height:400px; }
+ .hero h1 { max-width:760px; }
+ .approach-grid { gap:42px; }
+ .quiz-layout { grid-template-columns:1fr; gap:33px; }
+ .quiz-copy p { max-width:580px; }
+ .quiz-note { margin-top:20px; }
+}
+@media (max-width:700px) {
+ .container { width:calc(100% - 34px); }
+ .nav { min-height:70px; }
+ .nav-links { display:none; position:absolute; top:69px; left:0; right:0; background:#101c34; flex-direction:column; align-items:stretch; gap:0; padding:12px 24px 22px; border-bottom:1px solid rgba(255,255,255,.12); }
+ .nav-links.open { display:flex; }
+ .nav-links a { padding:13px 0; }
+ .nav-cta { display:none; }
+ .menu-toggle { display:block; }
+ .hero { min-height:0; padding:124px 0 54px; }
+ .hero h1 { font-size:clamp(48px,12.5vw,70px); }
+ .hero-copy { font-size:13px; }
+ .hero-actions { gap:12px; }
+ .visual { min-height:360px; margin:12px -4px 0; }
+ .orbit { width:320px; }
+ .orbit.o2 { width:255px; }
+ .glass-card { padding:21px; }
+ .float-tag.t1 { right:0; top:28px; }
+ .float-tag.t2 { bottom:25px; left:0; }
+ .section { padding:72px 0; }
+ .section-head { display:block; margin-bottom:28px; }
+ .section-intro { margin-top:18px; }
+ .pillars { grid-template-columns:1fr; gap:12px; }
+ .pillar { min-height:190px; }
+ .pillar .icon { margin:17px 0 15px; }
+ .approach-grid { grid-template-columns:1fr; gap:35px; }
+ .approach-intro { position:static; }
+ .quiz-section { padding-top:75px; padding-bottom:75px; }
+ .options { grid-template-columns:1fr; }
+ .option { min-height:65px; }
+ .quiz-card { padding:22px 18px; min-height:0; }
+ .quiz-question { font-size:29px; }
+ .result-price { align-items:flex-start; flex-direction:column; gap:12px; }
+ .deliverables { grid-template-columns:1fr; }
+ .request-form { grid-template-columns:1fr; }
+ .request-submit { grid-column:auto; }
+ .selected-service-top { flex-direction:column; gap:7px; }
+ .selected-service-price { text-align:left; }
+ .contact-section { padding:65px 0; }
+ .contact-box { align-items:flex-start; flex-direction:column; }
+ .footer-row { align-items:flex-start; flex-direction:column; }
+}
+</style>
+</head>
+<body>
+<div id="site-root" class="page">
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="DPDP Advisory with Kundan home"><span class="brand-mark">K.</span><span>DPDP <span style="color:var(--gold)">ADVISORY</span><small>WITH KUNDAN</small></span></a>
+      <nav class="nav-links" id="navLinks" aria-label="Main navigation"><a href="#services">Services</a><a href="#approach">Our approach</a><a href="#assessment">Find your fit</a><a href="#contact">Contact</a><a class="nav-privacy" href="#privacy">Privacy Notice</a><a class="nav-mail" href="mailto:kundanvictoria@rediffmail.com" aria-label="Email Kundan at kundanvictoria@rediffmail.com">Mail Kundan ↗</a></nav>
+      <a class="privacy-back" href="#top">← Back to website</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow fade-up">Independent DPDP consultancy</div>
+          <h1 class="fade-up delay-1">Privacy that works.<br><em>Compliance that lasts.</em></h1>
+          <p class="hero-copy fade-up delay-2">Make data protection part of how your business operates—not a folder of policies nobody uses. Practical DPDP readiness and implementation support for organisations across India.</p>
+          <div class="hero-actions fade-up delay-3"><a class="btn btn-gold" href="https://calendly.com/kundankarmakar1111/30min" target="_blank" rel="noopener noreferrer">Book a Free Consultancy <span>↗</span></a><a class="btn btn-ghost" href="#assessment">Find your compliance fit <span>↗</span></a></div>
+          <div class="hero-note fade-up delay-3"><span class="dot"></span><span>Practical. Proportionate. Built around your operations.</span></div>
+        </div>
+        <div class="visual" aria-label="Illustration of a data protection readiness dashboard">
+          <div class="orbit"></div><div class="orbit o2"></div>
+          <div class="glass-card">
+            <div class="card-head"><span>Privacy readiness</span><span class="status-chip">Illustrative</span></div>
+            <div class="score">01 <small>/ clarity first</small></div>
+            <div class="score-caption">A clear view of what to do next.</div>
+            <div class="meter"><span></span></div>
+            <div class="mini-rows"><div class="mini-row"><span>Data & process mapping</span><strong class="ok">Assess</strong></div><div class="mini-row"><span>Notices & consent flows</span><strong>Review</strong></div><div class="mini-row"><span>Governance & response</span><strong>Build</strong></div></div>
+          </div>
+          <div class="float-tag t1"><strong>Less guesswork.</strong><span class="tiny">A plan matched to your business.</span></div>
+          <div class="float-tag t2"><strong>People · Process · Proof</strong><span class="tiny">Compliance beyond paperwork.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="marquee-band" aria-hidden="true"><div class="marquee-track"><span>Understand your data <b>✳</b> Map the gaps <b>✳</b> Prioritise the work <b>✳</b> Build repeatable controls <b>✳</b> Prove what you do <b>✳</b></span><span>Understand your data <b>✳</b> Map the gaps <b>✳</b> Prioritise the work <b>✳</b> Build repeatable controls <b>✳</b> Prove what you do <b>✳</b></span></div></div>
+
+    <section class="section" id="services">
+      <div class="container">
+        <div class="section-head fade-up"><div><div class="kicker">Where we help</div><h2>From “what applies to us?” to <em>“we know what to do.”</em></h2></div><p class="section-intro">Not every organisation needs the same package. Start with your data, systems, people and exposure—then focus effort where it matters.</p></div>
+        <div class="pillars">
+          <article class="pillar fade-up"><div class="num">01 / UNDERSTAND</div><div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5M8 11h6M11 8v6"/></svg></div><h3>Readiness & gap assessment</h3><p>Understand how personal data moves through your business, where gaps may sit, and what deserves attention first.</p></article>
+          <article class="pillar fade-up delay-1"><div class="num">02 / DESIGN</div><div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3 20 7v5c0 4.8-3.4 7.9-8 9-4.6-1.1-8-4.2-8-9V7l8-4Z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg></div><h3>Policies & operating controls</h3><p>Develop practical notices, internal procedures, vendor questions and responsibility maps that fit real workflows.</p></article>
+          <article class="pillar fade-up delay-2"><div class="num">03 / EMBED</div><div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19V5m0 14h16M7 15l4-4 3 2 5-7"/><circle cx="19" cy="6" r="1.5"/></svg></div><h3>Implementation & awareness</h3><p>Help teams translate requirements into action, train the people involved, and establish evidence of routine practice.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section approach" id="approach">
+      <div class="container approach-grid">
+        <div class="approach-intro fade-up"><div class="kicker">A better way to begin</div><h2>Start with the business. <em>Not a template.</em></h2><p>Good privacy work is grounded in how an organisation actually collects, uses, stores and shares information. The goal is a useful roadmap—not paperwork for its own sake.</p><a class="text-link" href="#assessment">Get a tailored starting point <span>→</span></a></div>
+        <div class="steps">
+          <article class="step fade-up"><div class="step-index">01</div><div><h3>Understand your context</h3><p>Sector, organisation size, customer touchpoints, employee data, vendors and digital systems.</p></div></article>
+          <article class="step fade-up delay-1"><div class="step-index">02</div><div><h3>Identify gaps and priorities</h3><p>Separate immediate housekeeping from deeper process, technology or governance changes.</p></div></article>
+          <article class="step fade-up delay-2"><div class="step-index">03</div><div><h3>Agree a proportionate scope</h3><p>Set practical deliverables, owners, assumptions and a clear boundary for the engagement.</p></div></article>
+          <article class="step fade-up delay-3"><div class="step-index">04</div><div><h3>Build for day-to-day use</h3><p>Equip your team with usable documents, defined processes and an action plan to maintain them.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section quiz-section" id="assessment">
+      <div class="container quiz-layout">
+        <div class="quiz-copy fade-up"><div class="kicker">A short guided assessment</div><h2>See what your business <em>actually needs.</em></h2><p>Answer a few practical questions. We’ll suggest a suitable starting engagement and reveal only the relevant indicative fee—not the entire service menu.</p><div class="quiz-note"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3 20 7v5c0 4.8-3.4 7.9-8 9-4.6-1.1-8-4.2-8-9V7l8-4Z"/><path d="m9 12 2 2 4-4"/></svg><span>No personal data inventory or confidential customer information is needed for this initial estimate. Your answers are processed in this page only.</span></div></div>
+        <div class="quiz-card fade-up delay-1" id="quizCard" aria-live="polite">
+          <div class="quiz-top"><span id="stepLabel">Discovery · 01 of 05</span><span id="progressLabel">20% complete</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:20%"></div></div>
+          <div id="quizContent"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-section" id="contact"><div class="container"><div class="contact-box fade-up"><div><div class="kicker">A considered first conversation</div><h2>Good compliance begins with the right questions.</h2><p>Bring your current situation—not a polished brief. The first step is to understand the need and define a sensible scope.</p><div class="contact-details"><div>Mail: <a href="mailto:kundanvictoria@rediffmail.com">kundanvictoria@rediffmail.com</a></div><div>Phone: Request via email.</div></div></div><a class="btn btn-gold" href="mailto:kundanvictoria@rediffmail.com?subject=DPDP%20Consultancy%20request">Email Kundan <span>↗</span></a></div></div></section>
+  </main>
+  <section class="privacy-section" id="privacy" aria-labelledby="privacyTitle"><div class="container privacy-copy"><div class="privacy-meta">Website policy · Last updated 25 October 2026</div><h2 id="privacyTitle">Website Privacy Notice</h2><p class="privacy-lead">DPDP Advisory with Kundan aims to minimise personal information handled through this website. This notice explains what happens when you browse the website, use the discovery questionnaire, or choose to contact us.</p>
+    <h3>1. Who we are</h3><p>“DPDP Advisory with Kundan” (“we”, “us” or “our”) is an independent consultancy offering digital personal data protection awareness, consultancy, documentation, review and assessment services. For questions about this notice or information you have voluntarily sent to us, contact <a href="mailto:kundanvictoria@rediffmail.com">kundanvictoria@rediffmail.com</a>.</p>
+    <h3>2. Cookies and tracking</h3><p>The website application is not intentionally configured to set or use cookies, advertising trackers, tracking pixels or third-party analytics scripts. We do not use website cookies to build visitor profiles, follow visitors across websites or deliver behavioural advertising. However, hosting, security infrastructure, browsers or third-party services may independently process technical information or use their own necessary technologies. We therefore do not guarantee that every layer of the internet, hosting or email infrastructure operates without cookies or technical logs.</p>
+    <h3>3. Browsing the website</h3><p>You can view general website content without entering your name, phone number or other information into a website form. Hosting or security providers may nevertheless process technical information such as IP address, browser information, timestamps or security logs, where applicable, under their own configurations and policies. We do not sell personal data obtained through this website.</p>
+    <h3>4. Discovery questionnaire</h3><p>The questionnaire asks for broad business context, such as sector, organisation size, general data profile, current compliance status and services of interest. These answers are processed within the active browser page. The website application is not designed to send questionnaire answers to a consultancy-operated server or save them in a website account or database. Please do not enter actual customer records, identity documents, confidential business information or personal data about other individuals.</p><p>Questionnaire answers may remain in the currently open page while you use it. They are not intended to be stored in a website account or server-side database. Your browser, device, hosting environment or other technical infrastructure may have independent behaviour.</p>
+    <h3>5. Consultation requests and Gmail</h3><p>If you choose to request a consultation, the website asks for your name and phone number and uses your selected services to prepare an email draft. The draft is addressed to <strong>kundanvictoria@rediffmail.com</strong> with the subject “DPDP Consultancy request”. The current website opens a Gmail compose URL containing the request details you entered and the services selected. The email provider may process those details under its own terms, privacy policies and technical logging practices.</p><p>The website does not automatically send the email. You must review and send the draft yourself. If you contact us directly, we may receive your email address, name, phone number and any other information you choose to include.</p>
+    <h3>6. Why we use information you send</h3><p>Information you voluntarily send to us may be used to respond to your enquiry, understand the services requested, discuss the proposed scope, communicate about an engagement, maintain necessary business records, address disputes, and meet applicable legal obligations. We do not use consultation enquiries to build advertising profiles or sell prospective clients’ information.</p>
+    <h3>7. Retention</h3><p>The website application is not designed to maintain a server-side database of questionnaire answers or consultation requests. Emails that you send to us may be retained for as long as reasonably necessary to respond, manage a proposed or existing engagement, maintain appropriate business records or meet legal obligations. Where information is no longer required, we intend to delete it or otherwise cease retaining it, subject to applicable law. Retention by Google, your email provider, browser or hosting provider is governed separately by their practices and policies.</p>
+    <h3>8. Security and third-party services</h3><p>We aim to minimise the information handled through the website. Please do not send passwords, financial account credentials, identity documents or actual datasets containing other individuals’ personal information through the discovery questionnaire or ordinary email unless genuinely necessary for an agreed engagement. No internet-based transmission method can be guaranteed to be completely secure. When you use Gmail or another third-party service, that provider’s own terms, privacy policy and security practices apply to its processing.</p>
+    <h3>9. Your requests and concerns</h3><p>You may contact us to ask about personal information you have voluntarily shared, request correction of inaccurate information, seek deletion where appropriate, or raise a privacy concern. We will consider and respond to requests in accordance with applicable law. We may need to verify your identity and may retain information where legally required or permitted.</p><p><strong>Email:</strong> kundanvictoria@rediffmail.com<br><strong>Subject:</strong> Privacy Request — DPDP Advisory<br><strong>Telephone:</strong> Available upon request by email.</p><a class="privacy-contact" href="mailto:kundanvictoria@rediffmail.com?subject=Privacy%20Request%20%E2%80%94%20DPDP%20Advisory">Email a privacy request ↗</a>
+    <h3>10. Children’s information</h3><p>This website is primarily intended for businesses, organisations, professionals and individuals seeking consultancy services. Do not submit children’s personal information through the enquiry process unless it is genuinely necessary and appropriate for a separately agreed engagement.</p>
+    <h3>11. Changes to this notice</h3><p>We may update this notice to reflect changes to the website, services, third-party providers or applicable law. The latest version will be published here with its revision date. Please review it periodically.</p>
+    <p><em>This notice describes the website’s intended practices and currently described questionnaire and email workflow. It is not a guarantee of compliance with every applicable privacy law. Actual hosting, browser behaviour and third-party service configurations should be verified before publication.</em></p>
+  </div></section>
+  <footer class="footer"><div class="container footer-row"><a class="brand" href="#top"><span class="brand-mark">K.</span><span>DPDP ADVISORY<small>WITH KUNDAN</small></span></a><p class="footer-note">Independent consultancy concept. Services and indicative fees are subject to scope confirmation. This website is informational and does not constitute legal advice or a guarantee of compliance. Contact: kundanvictoria@rediffmail.com · Phone number available on email request.</p><div class="footer-links"><a href="#services">Services</a><a href="#approach">Approach</a><a href="#assessment">Assessment</a><a href="#privacy">Privacy Notice</a><a href="mailto:kundanvictoria@rediffmail.com">Mail Kundan</a></div></div></footer>
+</div>
+<script>
+(function(){
+  const questions = [
+    {key:'sector', title:'What kind of organisation are we helping?', sub:'Choose the closest fit. This helps frame the operating context.', options:[
+      {v:'services',i:'◇',t:'Professional services',d:'Consultants, agencies, firms'},
+      {v:'digital',i:'⌘',t:'IT, SaaS or digital',d:'Apps, platforms, software'},
+      {v:'commerce',i:'↗',t:'Retail or commerce',d:'Stores, ecommerce, consumer brands'},
+      {v:'regulated',i:'▦',t:'Education, health or other',d:'Institutions and other sectors'}]},
+    {key:'size', title:'How large is the organisation?', sub:'A broad estimate is enough for this first recommendation.', options:[
+      {v:'micro',i:'01',t:'1–10 people',d:'Founder-led or micro business'},
+      {v:'small',i:'02',t:'11–50 people',d:'Small team or growing firm'},
+      {v:'mid',i:'03',t:'51–250 people',d:'Multiple teams or locations'},
+      {v:'large',i:'04',t:'250+ people',d:'Complex or enterprise setup'}]},
+    {key:'data', title:'How does your business use personal data?', sub:'Think about customers, leads, employees and vendors.', options:[
+      {v:'basic',i:'○',t:'Mostly basic contact data',d:'Leads, email, billing contacts'},
+      {v:'customer',i:'◎',t:'Customer or user records',d:'Accounts, transactions or profiles'},
+      {v:'sensitive',i:'◉',t:'Higher-impact data or children',d:'Health, education or child-related data'},
+      {v:'mixed',i:'◌',t:'Not sure / a mix',d:'Several sources and systems'}]},
+    {key:'status', title:'Where are you in your DPDP journey?', sub:'Pick the statement that best describes today.', options:[
+      {v:'new',i:'↗',t:'Starting from zero',d:'Need clarity on the first steps'},
+      {v:'documents',i:'▤',t:'Have policies, unsure if enough',d:'Documents exist, practice is unclear'},
+      {v:'partial',i:'⌁',t:'Work is underway',d:'Some controls; gaps remain'},
+      {v:'mature',i:'✓',t:'Need an independent review',d:'Validate and improve existing work'}]},
+    {key:'services', multi:true, title:'Which services should we provide?', sub:'Select the services that best fit your organisation. Your tailored scope and pricing will be revealed after you finish this step.', options:[
+      {v:'training',i:'✳',t:'DPDP Awareness and training for employees',d:'Employee awareness and practical training'},
+      {v:'documentation',i:'▤',t:'Policies, Notices and other documentation support',d:'Policies, privacy notices and supporting documents'},
+      {v:'dpo',i:'↻',t:'Ongoing support and DPO appointment for SDF only',d:'Ongoing support · DPO appointment for SDFs only'},
+      {v:'consultancy',i:'⌕',t:'DPDP Consultancy and Review',d:'Focused advice and review'},
+      {v:'audit',i:'✓',t:'DPDP Audit and assessment',d:'Scoped assessment and findings'}]}
+  ];
+  const answers = {};
+  let index = 0;
+  const content = document.getElementById('quizContent');
+  const stepLabel = document.getElementById('stepLabel');
+  const progressLabel = document.getElementById('progressLabel');
+  const progressFill = document.getElementById('progressFill');
+  const packages = {
+    clarity:{name:'DPDP Readiness Snapshot',range:'₹4,999–₹9,999',tag:'Focused assessment',desc:'A proportionate starting point to establish what your business does with personal data, identify likely gaps and prioritise the next steps. Best when you need clarity before committing to a broader implementation.',deliverables:['Structured discovery session','High-level data and process map','Prioritised gap observations','Action roadmap with suggested owners'],why:'A focused assessment is a sensible first step before drafting a large volume of policies.'},
+    documents:{name:'Core Documentation Sprint',range:'₹12,500–₹24,999',tag:'Documents + workflow fit',desc:'A scoped documentation engagement to draft or review relevant privacy notices, internal procedures and practical templates based on your actual workflows. Final scope depends on the number of systems and touchpoints.',deliverables:['Document and process review','Prioritised notice / policy drafts','Internal procedure templates','Handover and implementation checklist'],why:'You already know the broad need; the next value is making documentation usable and consistent with practice.'},
+    implementation:{name:'DPDP Implementation Project',range:'₹29,999–₹74,999+',tag:'Multi-workstream project',desc:'A structured engagement for organisations that need help moving from identified gaps to practical controls, internal ownership and evidence of implementation. Complexity, vendor count and technical work affect the final scope.',deliverables:['Scoped workplan and responsibilities','Process and control recommendations','Team briefing / awareness session','Implementation tracker and review checkpoint'],why:'Hands-on implementation needs more coordination than a one-off document or assessment.'},
+    ongoing:{name:'Privacy Support Retainer',range:'₹9,999–₹29,999 / month',tag:'Recurring support',desc:'A recurring advisory arrangement for periodic reviews, practical questions and tracking agreed actions. The fee depends on response expectations, review frequency and the number of business units involved.',deliverables:['Agreed monthly advisory hours','Periodic action tracker review','Document / process updates within scope','Scheduled check-in with stakeholders'],why:'Ongoing guidance works best when there is an identified internal owner and an agreed support boundary.'}
+  };
+  const serviceCatalog = {
+    training:{name:'DPDP Awareness and training for employees',price:5000,recurring:false,deliverables:['One employee-awareness session covering practical DPDP concepts and responsibilities.','Examples of day-to-day privacy do’s and don’ts, plus time for questions.','Attendance / completion record and a concise follow-up summary.']},
+    documentation:{name:'Policies, Notices and other documentation support',price:5000,recurring:false,deliverables:['Review of the agreed documentation needs and relevant workflows.','Drafting or review support for agreed policies, privacy notices and supporting documents.','A handover checklist identifying information the organisation must confirm.']},
+    dpo:{name:'Ongoing support and DPO appointment for SDF only',price:5000,recurring:true,deliverables:['Ongoing advisory support and scheduled check-ins within an agreed scope.','A tracked action list and guidance on maintaining relevant privacy processes.','DPO appointment is limited to eligible Significant Data Fiduciaries and is subject to suitability, scope and formal agreement.']},
+    consultancy:{name:'DPDP Consultancy and Review',price:2500,recurring:false,deliverables:['A focused consultation on the organisation’s stated DPDP questions and current approach.','Review of agreed documents or processes supplied for the session.','Practical feedback and prioritised next steps.']},
+    audit:{name:'DPDP Audit and assessment',price:5000,recurring:false,deliverables:['A scoped review of supplied policies, process information and available evidence.','High-level gap observations against the agreed assessment scope.','A prioritised findings summary with suggested corrective actions.']}
+  };
+  const el = (tag,cls,txt) => { const n=document.createElement(tag); if(cls)n.className=cls; if(txt!==undefined)n.textContent=txt; return n; };
+  const money = amount => '₹'+Math.round(amount).toLocaleString('en-IN');
+  function drawQuestion(){
+    const q=questions[index];
+    stepLabel.textContent='Discovery · '+String(index+1).padStart(2,'0')+' of '+String(questions.length).padStart(2,'0');
+    progressLabel.textContent=Math.round(((index+1)/questions.length)*100)+'% complete';
+    progressFill.style.width=((index+1)/questions.length*100)+'%';
+    content.innerHTML='';
+    content.appendChild(el('h3','quiz-question',q.title));
+    content.appendChild(el('p','quiz-sub',q.sub));
+    const options=el('div','options');
+    q.options.forEach(o=>{
+      const active=q.multi?(Array.isArray(answers[q.key])&&answers[q.key].includes(o.v)):answers[q.key]===o.v;
+      const b=el('button','option'+(active?' selected':'')+(q.multi?' multi-option':'')); b.type='button';
+      const ico=el('span','option-icon',o.i); const txt=el('span',''); txt.appendChild(el('strong','',o.t)); txt.appendChild(el('small','',o.d));
+      b.appendChild(ico); b.appendChild(txt); b.appendChild(el('span','check'));
+      b.setAttribute('aria-pressed',active?'true':'false');
+      b.addEventListener('click',()=>{if(q.multi){const current=Array.isArray(answers[q.key])?[...answers[q.key]]:[];const position=current.indexOf(o.v);if(position>=0)current.splice(position,1);else current.push(o.v);answers[q.key]=current;}else{answers[q.key]=o.v;}drawQuestion();}); options.appendChild(b);
+    });
+    content.appendChild(options);
+    if(q.multi) renderSelectionSummary();
+    const footer=el('div','quiz-footer');
+    const back=el('button','back','← Back'); back.type='button'; back.disabled=index===0; back.addEventListener('click',()=>{if(index>0){index--;drawQuestion();}});
+    footer.appendChild(back);
+    const next=el('button','continue'); next.type='button'; next.disabled=q.multi?!(Array.isArray(answers.services)&&answers.services.length):!answers[q.key]; next.innerHTML=index===questions.length-1?'View tailored proposal <span>↗</span>':'Continue <span>→</span>';next.addEventListener('click',()=>{if(next.disabled)return;if(index<questions.length-1){index++;drawQuestion();}else{drawResult();}});footer.appendChild(next);
+    content.appendChild(footer);
+  }
+  function renderSelectionSummary(){
+    const selected=Array.isArray(answers.services)?answers.services:[];
+    const message=selected.length===0?'Select one or more services. Your deliverables and pricing will remain hidden until you view your tailored proposal.':selected.length+' service'+(selected.length===1?'':'s')+' selected. Your tailored proposal will show only the services you selected, their deliverables and your final payable amount.';
+    content.appendChild(el('p','selection-hint',message));
+  }
+  function renderServicePreview(){
+    const selected=Array.isArray(answers.services)?answers.services:[];
+    if(!selected.length){content.appendChild(el('p','selection-hint','Select at least one service to see exactly what is included and calculate your payable amount. A 10% multi-service discount applies when you select two or more services.'));return;}
+    const items=selected.map(key=>serviceCatalog[key]).filter(Boolean);
+    const multi=items.length>1;
+    const oneTimeSubtotal=items.filter(item=>!item.recurring).reduce((sum,item)=>sum+item.price,0);
+    const monthlySubtotal=items.filter(item=>item.recurring).reduce((sum,item)=>sum+item.price,0);
+    const rate=multi ? 0.10 : 0;
+    const oneTimeDiscount=Math.round(oneTimeSubtotal*rate);
+    const monthlyDiscount=Math.round(monthlySubtotal*rate);
+    const oneTimePayable=oneTimeSubtotal-oneTimeDiscount;
+    const monthlyPayable=monthlySubtotal-monthlyDiscount;
+    const initialPayable=oneTimePayable+monthlyPayable;
+    const section=el('section','service-preview');
+    section.appendChild(el('h4','','Your selected services'));
+    section.appendChild(el('p','service-preview-intro','Review the deliverables and fees below. The estimate updates whenever you add or remove a service.'));
+    const list=el('div','selected-service-list');
+    items.forEach(item=>{
+      const card=el('article','selected-service'); const head=el('div','selected-service-top');
+      head.appendChild(el('h5','',item.name));
+      const price=el('div','selected-service-price',money(item.price));price.appendChild(el('small','',item.recurring?'per month':'one-time'));head.appendChild(price);card.appendChild(head);
+      const ul=el('ul','');item.deliverables.forEach(line=>ul.appendChild(el('li','',line)));card.appendChild(ul);list.appendChild(card);
+    });
+    section.appendChild(list);
+    const breakdown=el('div','price-breakdown');
+    const addRow=(label,value,cls='')=>{const row=el('div','price-row'+(cls?' '+cls:''));row.appendChild(el('span','',label));row.appendChild(el('strong','',value));breakdown.appendChild(row);};
+    if(oneTimeSubtotal>0)addRow('One-time service subtotal',money(oneTimeSubtotal));
+    if(monthlySubtotal>0)addRow('Ongoing service subtotal',money(monthlySubtotal)+' / month');
+    if(multi){if(oneTimeDiscount>0)addRow('10% discount on one-time services','−'+money(oneTimeDiscount),'discount');if(monthlyDiscount>0)addRow('10% discount on monthly service','−'+money(monthlyDiscount)+' / month','discount');}
+    else addRow('Multi-service discount','Not applicable — select 2+ services');
+    if(oneTimeSubtotal>0)addRow('One-time payable after discount',money(oneTimePayable),'price-total');
+    if(monthlySubtotal>0)addRow('Monthly recurring payable',money(monthlyPayable)+' / month','price-total');
+    addRow(monthlySubtotal>0?'First-month total payable':'Total payable',money(initialPayable),'price-total');
+    breakdown.appendChild(el('p','price-note',monthlySubtotal>0?'The first-month total combines any selected one-time services with the first month of ongoing support. The recurring monthly fee continues thereafter until changed or ended under the agreed terms.':'All selected fees are one-time charges. Final scope and timing will be confirmed before work begins. This is an estimate, not an invoice.'));
+    section.appendChild(breakdown);
+    const form=el('div','request-form');
+    const nameLabel=el('label','','Your name');const nameInput=el('input','');nameInput.type='text';nameInput.name='requestName';nameInput.id='requestName';nameInput.placeholder='Enter your full name';nameInput.autocomplete='name';nameInput.required=true;nameInput.value=answers.requestName||'';nameInput.addEventListener('input',()=>{answers.requestName=nameInput.value;});nameLabel.appendChild(nameInput);
+    const phoneLabel=el('label','','Phone number');const phoneInput=el('input','');phoneInput.type='tel';phoneInput.name='requestPhone';phoneInput.id='requestPhone';phoneInput.placeholder='Enter your phone number';phoneInput.autocomplete='tel';phoneInput.required=true;phoneInput.value=answers.requestPhone||'';phoneInput.addEventListener('input',()=>{answers.requestPhone=phoneInput.value;});phoneLabel.appendChild(phoneInput);
+    form.appendChild(nameLabel);form.appendChild(phoneLabel);
+    const submit=el('button','btn btn-gold request-submit');submit.type='button';submit.innerHTML='Submit request via Gmail <span>↗</span>';
+    submit.addEventListener('click',()=>{
+      if(!nameInput.reportValidity())return;if(!phoneInput.reportValidity())return;
+      const requestName=nameInput.value.trim();const requestPhone=phoneInput.value.trim();
+      if(!requestName||!requestPhone){return;}
+      answers.requestName=requestName;answers.requestPhone=requestPhone;
+      const serviceLines=items.map(item=>'- '+item.name+' — '+money(item.price)+(item.recurring?' per month':' one-time')+'\n  Included: '+item.deliverables.join(' ')).join('\n\n');
+      const discountLines=multi?'10% multi-service discount applies because '+items.length+' services were selected.\nDiscount on one-time services: '+money(oneTimeDiscount)+'\nDiscount on monthly service: '+money(monthlyDiscount)+' / month.':'Multi-service discount: Not applicable (only one service selected).';
+      const payableLines=(oneTimeSubtotal>0?'One-time payable: '+money(oneTimePayable)+'\n':'')+(monthlySubtotal>0?'Monthly recurring payable: '+money(monthlyPayable)+' / month\n':'')+(monthlySubtotal>0?'First-month total payable: '+money(initialPayable):'Total payable: '+money(initialPayable));
+      const body='Dear Kundan\n\nWe would like to request DPDP Consultancy for our organization.\n\nHere is my Phone number : '+requestPhone+'\n\nbelow are the requested services.\n\n'+serviceLines+'\n\n'+(oneTimeSubtotal>0?'One-time service subtotal: '+money(oneTimeSubtotal)+'\n':'')+(monthlySubtotal>0?'Ongoing service subtotal: '+money(monthlySubtotal)+' / month\n':'')+discountLines+'\n'+payableLines+'\n\nregards\n\n'+requestName;
+      const recipient='kundanvictoria@rediffmail.com';
+      const subject='DPDP Consultancy request';
+      const encodedBody=encodeURIComponent(body);
+      const mailto='mailto:'+recipient+'?subject='+encodeURIComponent(subject)+'&body='+encodedBody;
+      const isMobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      if(isMobile){
+        // On phones, use the operating system's mail handler instead of opening Gmail web in a new tab.
+        // This allows Android/iOS to hand the draft to Gmail or the user's configured mail app.
+        window.location.href=mailto;
+      }else{
+        // Preserve the existing Gmail web compose workflow on desktop.
+        const gmail='https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(recipient)+'&su='+encodeURIComponent(subject)+'&body='+encodedBody;
+        window.open(gmail,'_blank');
+      }
+    });
+    form.appendChild(submit);section.appendChild(form);
+    section.appendChild(el('p','price-note','Selecting and submitting services opens a Gmail compose window addressed to kundanvictoria@rediffmail.com. Nothing is sent automatically; review and send the email yourself. The DPO appointment option is restricted to SDFs only and remains subject to eligibility and agreed scope.'));
+    content.appendChild(section);
+  }
+  function getPackage(){
+    if(answers.goal==='ongoing') return packages.ongoing;
+    if(answers.goal==='implementation') return packages.implementation;
+    if(answers.goal==='documents') return packages.documents;
+    if(answers.goal==='clarity') return packages.clarity;
+    if(answers.status==='new') return packages.clarity;
+    if(answers.status==='documents') return packages.documents;
+    if(answers.status==='partial') return packages.implementation;
+    return packages.clarity;
+  }
+  function drawResult(){
+    const selected=Array.isArray(answers.services)?answers.services:[];
+    const items=selected.map(key=>serviceCatalog[key]).filter(Boolean);
+    if(!items.length){index=questions.length-1;drawQuestion();return;}
+    const multi=items.length>1;
+    const oneTimePayable=items.filter(item=>!item.recurring).reduce((sum,item)=>sum+Math.round(item.price*(multi?0.9:1)),0);
+    const monthlyPayable=items.filter(item=>item.recurring).reduce((sum,item)=>sum+Math.round(item.price*(multi?0.9:1)),0);
+    const initialPayable=oneTimePayable+monthlyPayable;
+    stepLabel.textContent='Your tailored proposal'; progressLabel.textContent='Proposal ready'; progressFill.style.width='100%';
+    content.innerHTML='';
+    const head=el('div','result-head','');head.innerHTML='<span></span> YOUR SELECTED SERVICES';content.appendChild(head);
+    content.appendChild(el('h3','result-title','A proposal shaped around your needs.'));
+    content.appendChild(el('p','result-desc','Here is the scope you selected, what each engagement includes, and the payable amount for your requested combination.'));
+    const list=el('div','selected-service-list');
+    items.forEach(item=>{
+      const card=el('article','selected-service');const top=el('div','selected-service-top');top.appendChild(el('h5','',item.name));
+      const amount=Math.round(item.price*(multi?0.9:1));const fee=el('div','selected-service-price',money(amount));fee.appendChild(el('small','',item.recurring?'per month':'one-time'));top.appendChild(fee);card.appendChild(top);
+      const ul=el('ul','');item.deliverables.forEach(deliverable=>ul.appendChild(el('li','',deliverable)));card.appendChild(ul);list.appendChild(card);
+    });
+    content.appendChild(list);
+    const breakdown=el('div','price-breakdown');
+    const addRow=(label,value,cls='')=>{const row=el('div','price-row'+(cls?' '+cls:''));row.appendChild(el('span','',label));row.appendChild(el('strong','',value));breakdown.appendChild(row);};
+    if(oneTimePayable>0)addRow('One-time services',money(oneTimePayable));
+    if(monthlyPayable>0)addRow('Ongoing services',money(monthlyPayable)+' / month');
+    addRow(monthlyPayable>0?'First-month total payable':'Total payable',money(initialPayable),'price-total');
+    breakdown.appendChild(el('p','price-note',monthlyPayable>0?'The first-month total includes selected one-time work and the first month of ongoing support. The monthly fee continues thereafter under the agreed terms.':'These are one-time fees for the selected services. Final scope and timing will be confirmed before work begins.'));
+    content.appendChild(breakdown);
+    const form=el('div','request-form');
+    const nameLabel=el('label','','Your name');const nameInput=el('input','');nameInput.type='text';nameInput.name='requestName';nameInput.id='requestName';nameInput.placeholder='Enter your full name';nameInput.autocomplete='name';nameInput.required=true;nameInput.value=answers.requestName||'';nameInput.addEventListener('input',()=>{answers.requestName=nameInput.value;});nameLabel.appendChild(nameInput);
+    const phoneLabel=el('label','','Phone number');const phoneInput=el('input','');phoneInput.type='tel';phoneInput.name='requestPhone';phoneInput.id='requestPhone';phoneInput.placeholder='Enter your phone number';phoneInput.autocomplete='tel';phoneInput.required=true;phoneInput.value=answers.requestPhone||'';phoneInput.addEventListener('input',()=>{answers.requestPhone=phoneInput.value;});phoneLabel.appendChild(phoneInput);
+    form.appendChild(nameLabel);form.appendChild(phoneLabel);
+    const submit=el('button','btn btn-gold request-submit');submit.type='button';submit.innerHTML='Submit request via Gmail <span>↗</span>';
+    submit.addEventListener('click',()=>{
+      if(!nameInput.reportValidity()||!phoneInput.reportValidity())return;
+      const requestName=nameInput.value.trim();const requestPhone=phoneInput.value.trim();if(!requestName||!requestPhone)return;
+      answers.requestName=requestName;answers.requestPhone=requestPhone;
+      const serviceLines=items.map(item=>'- '+item.name+' — '+money(Math.round(item.price*(multi?0.9:1)))+(item.recurring?' per month':' one-time')+'\n  Included: '+item.deliverables.join(' ')).join('\n\n');
+      const payableLines=(oneTimePayable>0?'One-time services payable: '+money(oneTimePayable)+'\n':'')+(monthlyPayable>0?'Monthly recurring payable: '+money(monthlyPayable)+' / month\n':'')+(monthlyPayable>0?'First-month total payable: '+money(initialPayable):'Total payable: '+money(initialPayable));
+      const body='Dear Kundan\n\nWe would like to request DPDP Consultancy for our organization.\n\nHere is my Phone number : '+requestPhone+'\n\nBelow are the requested services.\n\n'+serviceLines+'\n\n'+payableLines+'\n\nRegards\n\n'+requestName;
+      const gmail='https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent('kundanvictoria@rediffmail.com')+'&su='+encodeURIComponent('DPDP Consultancy request')+'&body='+encodeURIComponent(body);
+      window.open(gmail,'_blank','noopener,noreferrer');
+    });
+    form.appendChild(submit);content.appendChild(form);
+    content.appendChild(el('p','price-note','Your request opens a Gmail draft addressed to kundanvictoria@rediffmail.com. Review and send it yourself; no email is sent automatically. The DPO appointment option is limited to eligible Significant Data Fiduciaries and remains subject to suitability and an agreed scope.'));
+    const actions=el('div','result-actions');const back=el('button','btn btn-outline','Change selected services ↺');back.type='button';back.addEventListener('click',()=>{index=questions.length-1;drawQuestion();});actions.appendChild(back);content.appendChild(actions);
+  }
+  function fallbackCopy(text,btn){const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');btn.innerHTML='Brief copied ✓';}catch(e){btn.innerHTML='Select and copy unavailable';}ta.remove();}
+  drawQuestion();
+  const menu=document.getElementById('navLinks'),toggle=document.getElementById('menuToggle');
+  toggle.addEventListener('click',()=>{const open=menu.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?'×':'☰';});
+  menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{menu.classList.remove('open');toggle.setAttribute('aria-expanded','false');toggle.textContent='☰';}));
+  function applyPrivacyRoute(){
+    const isPrivacy=window.location.hash==='#privacy';
+    document.body.classList.toggle('privacy-page-active',isPrivacy);
+    document.title=isPrivacy?'Privacy Notice — DPDP Advisory with Kundan':'DPDP Advisory — Privacy, made operational';
+    if(isPrivacy)window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange',applyPrivacyRoute);
+  applyPrivacyRoute();
+  const revealObserver=('IntersectionObserver' in window)?new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in-view');revealObserver.unobserve(e.target);}}),{threshold:.12}):null;
+  document.querySelectorAll('.fade-up').forEach(el=>{if(revealObserver)revealObserver.observe(el);else el.classList.add('in-view');});
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.querySelectorAll('.fade-up').forEach(el=>el.classList.add('in-view'));
+})();
+</script>
+</body>
+</html>
